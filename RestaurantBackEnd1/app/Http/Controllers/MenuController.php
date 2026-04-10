@@ -10,10 +10,17 @@ class MenuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $menu = Menu::all();
-        return view('menu.menu', compact('menu'));
+        $menuItems = Menu::all();
+
+        $selectedMenu = null;
+
+        if ($request->has('view')) {
+            $selectedMenu = Menu::find($request->view);
+        }
+
+        return view('menu.menu', compact('menuItems', 'selectedMenu'));
     }
 
     /**
@@ -21,7 +28,7 @@ class MenuController extends Controller
      */
     public function create()
     {
-        //
+        return view('menu.create');
     }
 
     /**
@@ -29,7 +36,16 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+        ]);
+
+        Menu::create($request->only('name', 'description', 'price'));
+
+        return redirect()->route('menu.index')
+                        ->with('success', 'Menu item created successfully.');
     }
 
     /**
@@ -37,7 +53,7 @@ class MenuController extends Controller
      */
     public function show(Menu $menu)
     {
-        //
+        return view('menu.show', compact('menu'));
     }
 
     /**
@@ -45,15 +61,29 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-        //
+        return view('menu.edit', compact('menu'));
     }
 
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, Menu $menu)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+        ]);
+
+        $menu->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+        ]);
+
+        return redirect()->route('menu.index')
+            ->with('success', 'Menu updated successfully.');
     }
 
     /**
@@ -61,6 +91,9 @@ class MenuController extends Controller
      */
     public function destroy(Menu $menu)
     {
-        //
+        $menu->delete();
+
+        return redirect()->route('menu.index')
+            ->with('success', 'Menu deleted successfully.');
     }
 }

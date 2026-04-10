@@ -10,7 +10,7 @@
 <body class="bg-gray-100 font-sans">
 
 <!-- Navbar -->
-<nav class="bg-white shadow">
+<!-- <nav class="bg-white shadow">
     <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-red-500">Goon Restaurant</h1>
         <div class="space-x-6">
@@ -19,8 +19,47 @@
             <a href="#contact" class="hover:text-red-500">Contact</a>
         </div>
     </div>
-</nav>
+</nav> -->
+<header class="w-full max-w-6xl mx-auto px-4 py-4 text-sm mb-6">
+    @if (Route::has('login'))
+        <nav class="flex items-center justify-between">
 
+            <!-- LEFT: Logo / Title -->
+            <h1 class="text-2xl font-bold text-black">
+                Goon Restaurant
+            </h1>
+
+            <!-- RIGHT: Auth Links -->
+            <div class="flex items-center gap-4">
+                @auth
+                    <a
+                        href="{{ url('/dashboard') }}"
+                        class="inline-block px-5 py-1.5 text-black border border-gray-300 hover:border-gray-500 rounded-sm text-sm"
+                    >
+                        Dashboard
+                    </a>
+                @else
+                    <a
+                        href="{{ route('login') }}"
+                        class="inline-block px-5 py-1.5 text-black border border-transparent hover:border-gray-300 rounded-sm text-sm"
+                    >
+                        Log in
+                    </a>
+
+                    @if (Route::has('register'))
+                        <a
+                            href="{{ route('register') }}"
+                            class="inline-block px-5 py-1.5 text-black border border-gray-300 hover:border-gray-500 rounded-sm text-sm"
+                        >
+                            Register
+                        </a>
+                    @endif
+                @endauth
+            </div>
+
+        </nav>
+    @endif
+</header>
 <!-- Hero -->
 <section class="text-center py-20 bg-red-500 text-white">
     <h1 class="text-5xl font-bold mb-4">Welcome to Goon Restaurant</h1>
